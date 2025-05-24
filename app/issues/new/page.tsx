@@ -1,20 +1,27 @@
 "use client";
-import { Button, Callout, TextField } from "@radix-ui/themes";
+import { Button, Callout, Text, TextField } from "@radix-ui/themes";
 import MDEditor from "@uiw/react-md-editor";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import rehypeSanitize from "rehype-sanitize";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createIssueSchema } from "@/app/validationSchemas";
+import { z } from "zod";
 
-interface IssueForm {
-  title: string;
-  description: string;
-}
+type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
   const router = useRouter();
-  const { register, control, handleSubmit } = useForm<IssueForm>();
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IssueForm>({
+    resolver: zodResolver(createIssueSchema),
+  });
   const [error, setError] = useState("");
 
   return (
@@ -37,6 +44,14 @@ const NewIssuePage = () => {
         })}
       >
         <TextField.Root placeholder="Title" {...register("title")} />
+        {errors.title && (
+          // Wrap in div to use form y spacing as Text does not support Tailwind classes
+          <div>
+            <Text color="red" as="p">
+              {errors.title.message}
+            </Text>
+          </div>
+        )}
         <Controller
           name="description"
           control={control}
@@ -54,6 +69,13 @@ const NewIssuePage = () => {
             />
           )}
         />
+        {errors.description && (
+          <div>
+            <Text color="red" as="p">
+              {errors.description.message}
+            </Text>
+          </div>
+        )}
         <Button>Submit New Issue</Button>
       </form>
     </div>
