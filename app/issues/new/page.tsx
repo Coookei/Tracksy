@@ -59,6 +59,13 @@ const NewIssuePage = () => {
             <MDEditor
               data-color-mode="light"
               {...field}
+              ref={(ref) => {
+                field.ref({
+                  focus: () => {
+                    ref?.textarea?.focus();
+                  },
+                });
+              }}
               textareaProps={{
                 placeholder: "Please describe your issue here...",
                 // maxLength: 10,
