@@ -9,6 +9,7 @@ import rehypeSanitize from "rehype-sanitize";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { z } from "zod";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -43,46 +44,37 @@ const NewIssuePage = () => {
           }
         })}
       >
-        <TextField.Root placeholder="Title" {...register("title")} />
-        {errors.title && (
-          // Wrap in div to use form y spacing as Text does not support Tailwind classes
-          <div>
-            <Text color="red" as="p">
-              {errors.title.message}
-            </Text>
-          </div>
-        )}
-        <Controller
-          name="description"
-          control={control}
-          render={({ field }) => (
-            <MDEditor
-              data-color-mode="light"
-              {...field}
-              ref={(ref) => {
-                field.ref({
-                  focus: () => {
-                    ref?.textarea?.focus();
-                  },
-                });
-              }}
-              textareaProps={{
-                placeholder: "Please describe your issue here...",
-                // maxLength: 10,
-              }}
-              previewOptions={{
-                rehypePlugins: [[rehypeSanitize]],
-              }}
-            />
-          )}
-        />
-        {errors.description && (
-          <div>
-            <Text color="red" as="p">
-              {errors.description.message}
-            </Text>
-          </div>
-        )}
+        <div className="space-y-1">
+          <TextField.Root placeholder="Title" {...register("title")} />
+          <ErrorMessage>{errors.title?.message}</ErrorMessage>
+        </div>
+        <div className="space-y-1">
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <MDEditor
+                data-color-mode="light"
+                {...field}
+                ref={(ref) => {
+                  field.ref({
+                    focus: () => {
+                      ref?.textarea?.focus();
+                    },
+                  });
+                }}
+                textareaProps={{
+                  placeholder: "Please describe your issue here...",
+                  // maxLength: 10,
+                }}
+                previewOptions={{
+                  rehypePlugins: [[rehypeSanitize]],
+                }}
+              />
+            )}
+          />
+          <ErrorMessage>{errors.description?.message}</ErrorMessage>
+        </div>
         <Button>Submit New Issue</Button>
       </form>
     </div>
