@@ -1,19 +1,16 @@
 import prisma from "@/prisma/client";
-import { Button, Table } from "@radix-ui/themes";
-import Link from "next/link";
+import { Table } from "@radix-ui/themes";
 import IssueStatusBadge from "../components/IssueStatusBadge";
+import IssueActions from "./IssueActions";
+// import { setTimeout } from "node:timers/promises";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
+  // await setTimeout(2000); // Test loading
 
   return (
     <div>
-      <div className="mb-5">
-        <Button>
-          <Link href="/issues/new">New Issue</Link>
-        </Button>
-      </div>
-
+      <IssueActions />
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
