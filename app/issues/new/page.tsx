@@ -1,6 +1,6 @@
 "use client";
-import ErrorMessage from "@/app/components/ErrorMessage";
-import Spinner from "@/app/components/Spinner";
+
+import { ErrorMessage, Skeleton, Spinner } from "@/app/components";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Callout, TextArea, TextField } from "@radix-ui/themes";
@@ -9,8 +9,6 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import rehypeSanitize from "rehype-sanitize";
 import { z } from "zod";
 
