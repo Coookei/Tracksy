@@ -1,16 +1,23 @@
 "use client";
-import { Button, Callout, Text, TextField } from "@radix-ui/themes";
-import MDEditor from "@uiw/react-md-editor";
+import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
+import { createIssueSchema } from "@/app/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Callout, TextArea, TextField } from "@radix-ui/themes";
 import axios from "axios";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import rehypeSanitize from "rehype-sanitize";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createIssueSchema } from "@/app/validationSchemas";
 import { z } from "zod";
-import ErrorMessage from "@/app/components/ErrorMessage";
-import Spinner from "@/app/components/Spinner";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+  loading: () => <Skeleton count={8} />,
+});
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -24,6 +31,7 @@ const NewIssuePage = () => {
   } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema),
   });
+  const [showEditor, setShowEditor] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
 
@@ -51,30 +59,39 @@ const NewIssuePage = () => {
           <ErrorMessage>{errors.title?.message}</ErrorMessage>
         </div>
         <div className="space-y-1">
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <MDEditor
-                data-color-mode="light"
-                {...field}
-                ref={(ref) => {
-                  field.ref({
-                    focus: () => {
-                      ref?.textarea?.focus();
-                    },
-                  });
-                }}
-                textareaProps={{
-                  placeholder: "Please describe your issue here...",
-                  maxLength: createIssueSchema.shape.description.maxLength as number,
-                }}
-                previewOptions={{
-                  rehypePlugins: [[rehypeSanitize]],
-                }}
-              />
-            )}
-          />
+          {showEditor ? (
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <MDEditor
+                  autoFocus={true}
+                  data-color-mode="light"
+                  {...field}
+                  ref={(ref) => {
+                    field.ref({
+                      focus: () => {
+                        ref?.textarea?.focus();
+                      },
+                    });
+                  }}
+                  textareaProps={{
+                    placeholder: "Please describe your issue here...",
+                    maxLength: createIssueSchema.shape.description.maxLength as number,
+                  }}
+                  previewOptions={{
+                    rehypePlugins: [[rehypeSanitize]],
+                  }}
+                />
+              )}
+            />
+          ) : (
+            <TextArea
+              placeholder="Please describe your issue here..."
+              onFocus={() => setShowEditor(true)}
+              rows={8}
+            />
+          )}
           <ErrorMessage>{errors.description?.message}</ErrorMessage>
         </div>
         <Button disabled={isSubmitting}>
