@@ -16,7 +16,7 @@ import { z } from "zod";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
-  loading: () => <Skeleton count={8} />,
+  loading: () => <Skeleton height={200} />,
 });
 
 type IssueForm = z.infer<typeof createIssueSchema>;
