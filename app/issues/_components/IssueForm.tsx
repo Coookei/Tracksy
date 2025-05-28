@@ -1,22 +1,17 @@
 "use client";
 
-import { ErrorMessage, Skeleton, Spinner } from "@/app/components";
+import { ErrorMessage, Spinner } from "@/app/components";
 import { issueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
-import { Button, Callout, TextArea, TextField } from "@radix-ui/themes";
+import { Button, Callout, TextField } from "@radix-ui/themes";
+import MDEditor from "@uiw/react-md-editor";
 import axios from "axios";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import rehypeSanitize from "rehype-sanitize";
 import { z } from "zod";
-
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
-  ssr: false,
-  loading: () => <Skeleton height={200} />,
-});
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
@@ -30,7 +25,6 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   } = useForm<IssueFormData>({
     resolver: zodResolver(issueSchema),
   });
-  const [showEditor, setShowEditor] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
 
@@ -42,7 +36,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
       else await axios.post("/api/issues", data);
 
       router.push("/issues");
-    } catch (error) {
+    } catch {
       setSubmitting(false);
       setError("An unexpected error has occurred. Please try again later.");
     }
@@ -57,45 +51,41 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
       )}
       <form className="space-y-3" onSubmit={onSubmit}>
         <div className="space-y-1">
-          <TextField.Root placeholder="Title" defaultValue={issue?.title} {...register("title")} />
+          <TextField.Root
+            placeholder="Title"
+            defaultValue={issue?.title}
+            {...register("title")}
+            autoFocus
+          />
           <ErrorMessage>{errors.title?.message}</ErrorMessage>
         </div>
         <div className="space-y-1">
-          {showEditor ? (
-            <Controller
-              name="description"
-              control={control}
-              defaultValue={issue?.description}
-              render={({ field }) => (
-                <MDEditor
-                  autoFocusEnd={true}
-                  data-color-mode="light"
-                  {...field}
-                  ref={(ref) => {
-                    field.ref({
-                      focus: () => {
-                        ref?.textarea?.focus();
-                      },
-                    });
-                  }}
-                  textareaProps={{
-                    placeholder: "Please describe your issue here...",
-                    maxLength: issueSchema.shape.description.maxLength as number,
-                  }}
-                  previewOptions={{
-                    rehypePlugins: [[rehypeSanitize]],
-                  }}
-                />
-              )}
-            />
-          ) : (
-            <TextArea
-              placeholder="Please describe your issue here..."
-              defaultValue={issue?.description}
-              onFocus={() => setShowEditor(true)}
-              rows={8}
-            />
-          )}
+          <Controller
+            name="description"
+            control={control}
+            defaultValue={issue?.description}
+            render={({ field }) => (
+              <MDEditor
+                className="editor-wrapper ml-0.25 mr-0.25"
+                data-color-mode="light"
+                {...field}
+                ref={(ref) => {
+                  field.ref({
+                    focus: () => {
+                      ref?.textarea?.focus();
+                    },
+                  });
+                }}
+                textareaProps={{
+                  placeholder: "Please describe your issue here...",
+                  maxLength: issueSchema.shape.description.maxLength as number,
+                }}
+                previewOptions={{
+                  rehypePlugins: [[rehypeSanitize]],
+                }}
+              />
+            )}
+          />
           <ErrorMessage>{errors.description?.message}</ErrorMessage>
         </div>
         <Button disabled={isSubmitting}>
