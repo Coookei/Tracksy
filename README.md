@@ -12,4 +12,6 @@ This color will then be respected throughout the app.
 ### .env
 ```env
 DATABASE_URL="mysql://user:password@localhost:3306/issue-tracker"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET=secret
 ```
