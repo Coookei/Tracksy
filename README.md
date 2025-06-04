@@ -14,4 +14,6 @@ This color will then be respected throughout the app.
 DATABASE_URL="mysql://user:password@localhost:3306/issue-tracker"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET=secret
+GOOGLE_CLIENT_ID=secret
+GOOGLE_CLIENT_SECRET=secret
 ```
