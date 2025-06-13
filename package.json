@@ -8,10 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "format": "prettier --write .",
     "check": "pnpm lint && pnpm format:check",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prepare": "husky install"
   },
   "packageManager": "pnpm@10.12.1",
   "dependencies": {
@@ -48,8 +49,18 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^16.1.0",
     "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json}": [
+      "prettier --write"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ]
   }
 }
