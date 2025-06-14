@@ -30,10 +30,16 @@ const IssuesPage = async ({ searchParams }: Props) => {
     { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
   ];
 
+  const orderBy =
+    params.orderBy && columns.some((col) => col.value === params.orderBy)
+      ? { [params.orderBy]: params.dir === "desc" ? "desc" : "asc" }
+      : undefined;
+
   const issues = await prisma.issue.findMany({
     where: {
       status: status,
     },
+    orderBy,
   });
 
   return (
