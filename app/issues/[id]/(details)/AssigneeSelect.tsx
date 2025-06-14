@@ -1,12 +1,12 @@
 "use client";
 
 import { Skeleton } from "@/app/components";
-import { User } from "@prisma/client";
+import { Issue, User } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const AssigneeSelect = () => {
+const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const {
     data: users,
     error,
@@ -18,24 +18,22 @@ const AssigneeSelect = () => {
     retry: 3,
   });
 
+  const handleValueChange = async (userId: string) => {
+    axios.patch(`/api/issues/${issue.id}`, {
+      assignedToUserId: userId === "null" ? null : userId,
+    });
+  };
+
+  if (isLoading) return <Skeleton height="2rem" />;
   if (error) return null;
 
-  const skeletons = [1, 2, 3];
-
   return (
-    <Select.Root>
+    <Select.Root onValueChange={handleValueChange} defaultValue={issue.assignedToUserId || "null"}>
       <Select.Trigger placeholder="Assign..." />
-      {/* position="popper" allows the menu to be opened even when all the elements are disabled */}
-      <Select.Content position={isLoading ? "popper" : undefined}>
+      <Select.Content>
         <Select.Group>
-          <Select.Label>{isLoading ? "Loading..." : "Suggestions"}</Select.Label>
-          {isLoading &&
-            skeletons.map((skel) => (
-              <Select.Item key={`skel-${skel}`} value={`skel-${skel}`} disabled aria-disabled>
-                <Skeleton width="10rem" />
-              </Select.Item>
-            ))}
-
+          <Select.Label>Suggestions</Select.Label>
+          <Select.Item value="null">Unassigned</Select.Item>
           {users?.map((user) => (
             <Select.Item key={user.id} value={user.id}>
               {user.name}
