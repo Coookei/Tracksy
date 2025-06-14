@@ -8,16 +8,11 @@ import axios, { AxiosError } from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
-  const {
-    data: users,
-    error,
-    isLoading,
-  } = useQuery<User[]>({
-    queryKey: ["users"],
-    queryFn: () => axios.get<User[]>("/api/users").then((res) => res.data),
-    staleTime: 60 * 1000,
-    retry: 3,
-  });
+  const { data: users, error, isLoading } = useUsers();
+  toast.remove(); // don't show any previous toasts
+
+  if (isLoading) return <Skeleton height="2rem" />;
+  if (error) return null;
 
   const handleValueChange = async (userId: string) => {
     const promise = axios
@@ -40,9 +35,6 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
       { style: { minWidth: "280px" } },
     );
   };
-
-  if (isLoading) return <Skeleton height="2rem" />;
-  if (error) return null;
 
   return (
     <>
@@ -67,5 +59,13 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     </>
   );
 };
+
+const useUsers = () =>
+  useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: () => axios.get<User[]>("/api/users").then((res) => res.data),
+    staleTime: 60 * 1000,
+    retry: 3,
+  });
 
 export default AssigneeSelect;
