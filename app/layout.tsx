@@ -15,7 +15,7 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: "Issue Tracker",
-  description: "An Issue Tracker built with Next.js and Radix UI",
+  description: "An Issue Tracker built with Next.js",
 };
 
 export default function RootLayout({
