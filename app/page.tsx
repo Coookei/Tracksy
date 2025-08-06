@@ -21,6 +21,8 @@ const HomePage = async () => {
   );
 };
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Issue Tracker - Dashboard",
   description: "View a summary of all project issues",
