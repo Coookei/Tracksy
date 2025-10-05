@@ -26,11 +26,11 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "format:check": "prettier --check .",
-    "format": "prettier --write .",
-    "check": "pnpm lint && pnpm format:check",
-    "postinstall": "prisma generate",
-    "prepare": "husky install"
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "check": "pnpm lint && pnpm format",
+    "prepare": "husky install",
+    "postinstall": "prisma generate"
   },
   "packageManager": "pnpm@10.18.0",
   "dependencies": {
