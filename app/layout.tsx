@@ -14,8 +14,9 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Issue Tracker",
-  description: "An Issue Tracker built with Next.js",
+  title: "Tracksy",
+  description:
+    "A modern, authenticated issue tracker built with Next.js, featuring a secure API, Markdown editing, and a clean UI with filtering, sorting, and graphs.",
 };
 
 export default function RootLayout({

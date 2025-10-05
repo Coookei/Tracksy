@@ -1,7 +1,25 @@
 {
-  "name": "issue-tracker",
-  "version": "0.1.0",
+  "name": "tracksy",
   "private": true,
+  "version": "1.0.0",
+  "description": "A modern, authenticated issue tracker built with Next.js, featuring a secure API, Markdown editing, and a clean UI with filtering, sorting, and graphs.",
+  "keywords": [
+    "Next.js",
+    "TypeScript",
+    "Prisma",
+    "MySQL",
+    "NextAuth",
+    "MD Editor",
+    "React Query",
+    "Husky"
+  ],
+  "author": "Coookei",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coookei/Tracksy"
+  },
+  "homepage": "https://tracksy.tomfox.tech",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -14,7 +32,7 @@
     "postinstall": "prisma generate",
     "prepare": "husky install"
   },
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.18.0",
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.1",
     "@hookform/resolvers": "^5.0.1",
