@@ -19,7 +19,7 @@ A modern, authenticated issue tracker built with Next.js, featuring a secure API
 - [Available Scripts](#available-scripts-)
 - [Pre-commit Hooks](#pre-commit-hooks-)
 - [API Endpoints](#api-endpoints-)
-- [Deployment](#deployment-)
+- [Deployment](#deployment-%E2%80%8D)
 - [Contributing](#contributing-)
 - [License](#license-)
 
